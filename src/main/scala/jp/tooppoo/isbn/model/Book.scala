@@ -28,10 +28,13 @@ case class Book private(json: Json) {
   val isbn13: String = identifier.find(findByIsbn(13)).getOrElse[String]("identifier")("").right.get
 }
 
-case class InvalidBook(cause: ParsingFailure, rawJson: String)
+case class InvalidBookRecord(cause: ParsingFailure, rawJson: String)
+
 
 object Book {
-  def parseJson(json: String): Either[InvalidBook, Seq[Book]] = {
+  type FetchedBookRecord = Either[InvalidBookRecord, Seq[Book]]
+
+  def parseJson(json: String): FetchedBookRecord = {
     val raw: Either[ParsingFailure, Json] = parser.parse(json)
 
     if (raw.isRight) {
@@ -40,7 +43,7 @@ object Book {
 
       Right(books)
     } else {
-      Left(new InvalidBook(raw.left.get, json))
+      Left(new InvalidBookRecord(raw.left.get, json))
     }
   }
 }

@@ -1,6 +1,6 @@
 package jp.tooppoo.isbn.presentation
 
-import jp.tooppoo.isbn.model.{Book, InvalidBook}
+import jp.tooppoo.isbn.model.{Book, InvalidBookRecord}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.io.Source
@@ -52,7 +52,7 @@ class PresentationTest extends WordSpec with Matchers {
         val invalidJson = """{"dummy":"""
         val invalidBook = Left(Book.parseJson(invalidJson).left.get)
 
-        val books: Seq[Either[InvalidBook, Seq[Book]]] = validBooks :+ invalidBook
+        val books: Seq[Either[InvalidBookRecord, Seq[Book]]] = validBooks :+ invalidBook
         val output = presenter.transform(books)
 
 
