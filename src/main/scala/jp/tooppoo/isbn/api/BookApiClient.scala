@@ -7,14 +7,14 @@ import scala.concurrent.Future
 
 trait BookApiClient {
   protected val client = Http.default
-  
-  def list(isbn: Long): Future[String]
+
+  def fetchByIsbn(isbn: String): Future[String]
 }
 
 class GoogleBookClient extends BookApiClient {
   val baseUrl = "https://www.googleapis.com/books/v1/volumes"
 
-  def list(isbn: Long): Future[String] = {
+  def fetchByIsbn(isbn: String): Future[String] = {
     val query = s"q=isbn:$isbn"
     val svc = url(s"$baseUrl?$query")
 

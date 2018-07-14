@@ -11,41 +11,42 @@ trait Presentation {
     }
 
   }
-  def transform(books: Seq[Either[InvalidBook, Book]]): String
+  def transform(books: Seq[Either[InvalidBook, Seq[Book]]]): String
 }
 
 class CsvPresentation extends Presentation {
-  def transform(books: Seq[Either[InvalidBook, Book]]): String = {
-    val rows = books.map { maybeBook =>
-      if (maybeBook.isRight) {
-        val book = maybeBook.right.get
-        val row: Seq[String] = Seq(
-          book.isbn10,
-          book.isbn13,
-          "",
-          "",
-          "読み終わった", // TODO とりあえず固定
-          "",
-          "",
-          "",
-          "", // TODO ブクログでの読み取り日時? とりあえず空欄
-          "", // TODO ブクログでの読み取り日時? とりあえず空欄
-          book.name,
-          book.authors.mkString(" "),
-          book.publisher,
-          book.publishedAt,
-          convertPrintType(book.printType),
-          book.pageCount.getOrElse("").toString,
-          book.price.getOrElse("").toString
-        )
-        row.mkString(",")
-      } else {
+  def transform(books: Seq[Either[InvalidBook, Seq[Book]]]): String = {
+    val rows = books.flatMap {
+      case Right(books) => {
+        books.map { book =>
+          val row: Seq[String] = Seq(
+            book.isbn10,
+            book.isbn13,
+            "",
+            "",
+            "読み終わった", // TODO とりあえず固定
+            "",
+            "",
+            "",
+            "", // TODO ブクログでの読み取り日時? とりあえず空欄
+            "", // TODO ブクログでの読み取り日時? とりあえず空欄
+            book.name,
+            book.authors.mkString(" "),
+            book.publisher,
+            book.publishedAt,
+            convertPrintType(book.printType),
+            book.pageCount.getOrElse("").toString,
+            book.price.getOrElse("").toString
+          )
+          row.mkString(",")
+        }
+      }
+      case Left(invalid) => {
         val prefix = "ERROR"
-        val invalid = maybeBook.left.get
         val message = invalid.cause.message
         val json = invalid.rawJson
 
-        s"$prefix: $message $json"
+        Seq(s"$prefix: $message $json")
       }
     }
     rows.mkString("\n")

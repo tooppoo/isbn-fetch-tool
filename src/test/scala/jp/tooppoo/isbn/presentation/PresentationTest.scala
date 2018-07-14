@@ -25,7 +25,7 @@ class PresentationTest extends WordSpec with Matchers {
     }
     "single book" in withCsvPresentation { presenter =>
       withJsonResource("book.json") { json =>
-        val books = Book.parseJson(json).right.get.map { Right(_) }
+        val books = Seq(Right(Book.parseJson(json).right.get))
         val output = presenter.transform(books)
 
         val expected = "4048869515,9784048869515,,,読み終わった,,,,,,ECサイト「4モデル式」戦略マーケティング,権成俊 村上佐央里,アスキー・メディアワークス,2012-09,本,239,"
@@ -35,7 +35,7 @@ class PresentationTest extends WordSpec with Matchers {
     }
     "some books" in withCsvPresentation { presenter =>
       withJsonResource("books.json") { json =>
-        val books = Book.parseJson(json).right.get.map { Right(_) }
+        val books = Seq(Right(Book.parseJson(json).right.get))
         val output = presenter.transform(books)
 
         val expected = Seq(
@@ -48,11 +48,11 @@ class PresentationTest extends WordSpec with Matchers {
     }
     "contain invalid book" in withCsvPresentation { presenter =>
       withJsonResource("book.json") { json =>
-        val validBooks = Book.parseJson(json).right.get.map { Right(_) }
+        val validBooks = Seq(Right(Book.parseJson(json).right.get))
         val invalidJson = """{"dummy":"""
         val invalidBook = Left(Book.parseJson(invalidJson).left.get)
 
-        val books: Seq[Either[InvalidBook, Book]] = validBooks :+ invalidBook
+        val books: Seq[Either[InvalidBook, Seq[Book]]] = validBooks :+ invalidBook
         val output = presenter.transform(books)
 
 
