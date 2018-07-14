@@ -1,0 +1,171 @@
+  {
+    "kind": "books#volumes",
+    "totalItems": 1,
+    "items": [
+      {
+        "kind": "books#volume",
+        "id": "wOOXMQEACAAJ",
+        "etag": "cdgGOqWAAVs",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/wOOXMQEACAAJ",
+        "volumeInfo": {
+          "title": "ECサイト「4モデル式」戦略マーケティング",
+          "subtitle": "",
+          "authors": [
+            "権成俊",
+            "村上佐央里"
+          ],
+          "publisher": "アスキー・メディアワークス",
+          "publishedDate": "2012-09",
+          "description": "「ワイン」と「サプリメント」の売り方はどう違うのか?ネット通販の戦略立案からアクセス解析まで1冊でつかめる。",
+          "industryIdentifiers": [
+            {
+              "type": "ISBN_10",
+              "identifier": "4048869515"
+            },
+            {
+              "type": "ISBN_13",
+              "identifier": "9784048869515"
+            }
+          ],
+          "readingModes": {
+            "text": false,
+            "image": false
+          },
+          "pageCount": 239,
+          "printType": "BOOK",
+          "maturityRating": "NOT_MATURE",
+          "allowAnonLogging": false,
+          "contentVersion": "preview-1.0.0",
+          "imageLinks": {
+            "smallThumbnail": "http://books.google.com/books/content?id=wOOXMQEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+            "thumbnail": "http://books.google.com/books/content?id=wOOXMQEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+          },
+          "language": "ja",
+          "previewLink": "http://books.google.co.jp/books?id=wOOXMQEACAAJ&dq=isbn:4048869515&hl=&cd=1&source=gbs_api",
+          "infoLink": "http://books.google.co.jp/books?id=wOOXMQEACAAJ&dq=isbn:4048869515&hl=&source=gbs_api",
+          "canonicalVolumeLink": "https://books.google.com/books/about/EC%E3%82%B5%E3%82%A4%E3%83%88_4%E3%83%A2%E3%83%87%E3%83%AB%E5%BC%8F_%E6%88%A6%E7%95%A5%E3%83%9E%E3%83%BC.html?hl=&id=wOOXMQEACAAJ"
+        },
+        "saleInfo": {
+          "country": "JP",
+          "saleability": "NOT_FOR_SALE",
+          "isEbook": false
+        },
+        "accessInfo": {
+          "country": "JP",
+          "viewability": "NO_PAGES",
+          "embeddable": false,
+          "publicDomain": false,
+          "textToSpeechPermission": "ALLOWED",
+          "epub": {
+            "isAvailable": false
+          },
+          "pdf": {
+            "isAvailable": false
+          },
+          "webReaderLink": "http://play.google.com/books/reader?id=wOOXMQEACAAJ&hl=&printsec=frontcover&source=gbs_api",
+          "accessViewStatus": "NONE",
+          "quoteSharingAllowed": false
+        },
+        "searchInfo": {
+          "textSnippet": "「ワイン」と「サプリメント」の売り方はどう違うのか?ネット通販の戦略立案からアクセス解析まで1冊でつかめる。"
+        }
+      },
+      {
+        "kind": "books#volume",
+        "id": "Kw2fDAAAQBAJ",
+        "etag": "w1jt+7X/vzg",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/Kw2fDAAAQBAJ",
+        "volumeInfo": {
+          "title": "通販ビジネスの教科書",
+          "authors": [
+            "岩永　洋平"
+          ],
+          "publisher": "東洋経済新報社",
+          "publishedDate": "2016-07-08",
+          "description": "なぜ、多くの顧客の心に刺さるのか！ 大手通販各社の成長を支援し、多くの通販商品飛躍に導いたノウハウを明かす本格的解説書。",
+          "industryIdentifiers": [
+            {
+              "type": "ISBN_13",
+              "identifier": "9784492557709"
+            },
+            {
+              "type": "ISBN_10",
+              "identifier": "4492557709"
+            }
+          ],
+          "readingModes": {
+            "text": true,
+            "image": true
+          },
+          "pageCount": 264,
+          "printType": "BOOK",
+          "categories": [
+            "Business & Economics"
+          ],
+          "maturityRating": "NOT_MATURE",
+          "allowAnonLogging": false,
+          "contentVersion": "1.3.2.0.preview.3",
+          "panelizationSummary": {
+            "containsEpubBubbles": false,
+            "containsImageBubbles": false
+          },
+          "imageLinks": {
+            "smallThumbnail": "http://books.google.com/books/content?id=Kw2fDAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+            "thumbnail": "http://books.google.com/books/content?id=Kw2fDAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+          },
+          "language": "ja",
+          "previewLink": "http://books.google.co.jp/books?id=Kw2fDAAAQBAJ&printsec=frontcover&dq=isbn:4492557709&hl=&cd=1&source=gbs_api",
+          "infoLink": "https://play.google.com/store/books/details?id=Kw2fDAAAQBAJ&source=gbs_api",
+          "canonicalVolumeLink": "https://market.android.com/details?id=book-Kw2fDAAAQBAJ"
+        },
+        "saleInfo": {
+          "country": "JP",
+          "saleability": "FOR_SALE",
+          "isEbook": true,
+          "listPrice": {
+            "amount": 1944,
+            "currencyCode": "JPY"
+          },
+          "retailPrice": {
+            "amount": 1750,
+            "currencyCode": "JPY"
+          },
+          "buyLink": "https://play.google.com/store/books/details?id=Kw2fDAAAQBAJ&rdid=book-Kw2fDAAAQBAJ&rdot=1&source=gbs_api",
+          "offers": [
+            {
+              "finskyOfferType": 1,
+              "listPrice": {
+                "amountInMicros": 1944000000,
+                "currencyCode": "JPY"
+              },
+              "retailPrice": {
+                "amountInMicros": 1750000000,
+                "currencyCode": "JPY"
+              }
+            }
+          ]
+        },
+        "accessInfo": {
+          "country": "JP",
+          "viewability": "PARTIAL",
+          "embeddable": true,
+          "publicDomain": false,
+          "textToSpeechPermission": "ALLOWED",
+          "epub": {
+            "isAvailable": true,
+            "acsTokenLink": "http://books.google.co.jp/books/download/%E9%80%9A%E8%B2%A9%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9%E3%81%AE%E6%95%99%E7%A7%91%E6%9B%B8-sample-epub.acsm?id=Kw2fDAAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+          },
+          "pdf": {
+            "isAvailable": true,
+            "acsTokenLink": "http://books.google.co.jp/books/download/%E9%80%9A%E8%B2%A9%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9%E3%81%AE%E6%95%99%E7%A7%91%E6%9B%B8-sample-pdf.acsm?id=Kw2fDAAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+          },
+          "webReaderLink": "http://play.google.com/books/reader?id=Kw2fDAAAQBAJ&hl=&printsec=frontcover&source=gbs_api",
+          "accessViewStatus": "SAMPLE",
+          "quoteSharingAllowed": false
+        },
+        "searchInfo": {
+          "textSnippet": "なぜ、多くの顧客の心に刺さるのか！ 大手通販各社の成長を支援し、多くの通販商品飛躍に導いたノウハウを明かす本格的解説書。"
+        }
+      }
+    ]
+  }

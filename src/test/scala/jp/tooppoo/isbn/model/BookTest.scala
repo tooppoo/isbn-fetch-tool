@@ -33,7 +33,7 @@ class BookTest extends WordSpec with Matchers {
         assert(body.publisher == "アスキー・メディアワークス")
         assert(body.publishedAt == "2012-09")
         assert(body.printType == "BOOK")
-        assert(body.pageCount == 239)
+        assert(body.pageCount.get == 239)
       }
     }
   }

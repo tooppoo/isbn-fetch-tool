@@ -11,12 +11,18 @@ case class Book private(json: Json) {
   }
 
   val name: String = volume.getOrElse[String]("title")("").right.get
+
   val authors: Seq[String] = volume.getOrElse[Seq[String]]("authors")(Seq.empty).right.get
+
   val publisher: String = volume.getOrElse[String]("publisher")("").right.get
+
   val publishedAt: String = volume.getOrElse[String]("publishedDate")("").right.get
+
   val printType: String = volume.getOrElse[String]("printType")("").right.get
-  val pageCount: Int = volume.getOrElse[Int]("pageCount")(-1).right.get
-  val price = volume.getOrElse[Long]("price")(-1).right.get
+
+  val pageCount: Option[Int] = volume.getOrElse[Option[Int]]("pageCount")(None).right.get
+
+  val price: Option[Long] = volume.getOrElse[Option[Long]]("price")(None).right.get
 
   val isbn10: String = identifier.find(findByIsbn(10)).getOrElse[String]("identifier")("").right.get
   val isbn13: String = identifier.find(findByIsbn(13)).getOrElse[String]("identifier")("").right.get
