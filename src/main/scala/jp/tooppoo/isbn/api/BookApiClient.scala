@@ -5,9 +5,14 @@ import dispatch.{Http, as, url}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object GoogleBookClient {
+trait BookApiClient {
+  protected val client = Http.default
+  
+  def list(isbn: Long): Future[String]
+}
+
+class GoogleBookClient extends BookApiClient {
   val baseUrl = "https://www.googleapis.com/books/v1/volumes"
-  val client = Http.default
 
   def list(isbn: Long): Future[String] = {
     val query = s"q=isbn:$isbn"
@@ -15,4 +20,8 @@ object GoogleBookClient {
 
     client(svc OK as.String)
   }
+}
+
+object BookApiClient {
+  val fromGoogleBooks = new GoogleBookClient
 }
