@@ -3,7 +3,7 @@ package jp.tooppoo.isbn.model
 import io.circe.{Json, ParsingFailure, parser, Error}
 import org.slf4j.LoggerFactory
 
-case class Book private(json: Json) {
+case class Book private(json: Json, quiriedIsbn: String) {
   private val volume = json.hcursor.downField("volumeInfo")
   private val identifier = volume.downField("industryIdentifiers").downArray
 
@@ -29,7 +29,7 @@ case class Book private(json: Json) {
   val isbn13: String = identifier.find(findByIsbn(13)).getOrElse[String]("identifier")("").right.get
 }
 
-case class InvalidBookRecord(cause: Exception, rawJson: String)
+case class InvalidBookRecord(cause: Exception, rawJson: String, failedIsbn: String)
 
 
 object Book {
@@ -37,7 +37,7 @@ object Book {
 
   final case class BookNotFound(message: String) extends RuntimeException(message)
 
-  def parseJson(json: String): FetchedBookRecord = {
+  def parseJson(json: String, queriedIsbn: String): FetchedBookRecord = {
     val logger = LoggerFactory.getLogger("Book::parseJson")
 
     val raw: Either[ParsingFailure, Json] = parser.parse(json)
@@ -51,25 +51,25 @@ object Book {
         if (totalItems > 0) {
           validRaw.hcursor.get[Seq[Json]]("items") match {
             case Right(rawBooks) => {
-              val books = rawBooks.map { new Book(_) }
+              val books = rawBooks.map { new Book(_, queriedIsbn) }
               Right(books)
             }
             case Left(invalid) => {
               logger.debug("fail to get items")
               logger.debug(s"json = $json")
 
-              Left(new InvalidBookRecord(invalid, json))
+              Left(new InvalidBookRecord(invalid, json, queriedIsbn))
             }
           }
         } else {
-          Left(new InvalidBookRecord(new BookNotFound("book not found"), json))
+          Left(new InvalidBookRecord(new BookNotFound("book not found"), json, queriedIsbn))
         }
       }
       case Left(invalidRaw) => {
         logger.debug("fail to parse json")
         logger.debug(s"json = $json")
 
-        Left(new InvalidBookRecord(invalidRaw, json))
+        Left(new InvalidBookRecord(invalidRaw, json, queriedIsbn))
       }
     }
   }

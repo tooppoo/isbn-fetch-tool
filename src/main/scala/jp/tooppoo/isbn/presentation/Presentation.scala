@@ -49,10 +49,11 @@ class CsvPresentation extends Presentation {
         }
       case Left(invalid) =>
         val prefix = "ERROR"
+        val failedIsbn = invalid.failedIsbn
         val message = invalid.cause.getMessage.asInline
         val json = invalid.rawJson.asInline
 
-        Seq(s""""$prefix: $message $json"""")
+        Seq(s""""$prefix: $failedIsbn $message $json"""")
     }
     rows.mkString("\n")
   }
