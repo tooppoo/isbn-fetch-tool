@@ -9,6 +9,7 @@ trait BookApiClient {
   protected val client = Http.default
 
   def fetchByIsbn(isbn: String): Future[String]
+  def close: Unit
 }
 
 class GoogleBookClient extends BookApiClient {
@@ -20,6 +21,8 @@ class GoogleBookClient extends BookApiClient {
 
     client(svc OK as.String)
   }
+
+  def close = Http.default.client.close()
 }
 
 object BookApiClient {

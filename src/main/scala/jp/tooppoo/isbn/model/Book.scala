@@ -1,6 +1,7 @@
 package jp.tooppoo.isbn.model
 
-import io.circe.{Json, ParsingFailure, parser}
+import io.circe.{Json, ParsingFailure, parser, Error}
+import org.slf4j.LoggerFactory
 
 case class Book private(json: Json) {
   private val volume = json.hcursor.downField("volumeInfo")
@@ -28,22 +29,34 @@ case class Book private(json: Json) {
   val isbn13: String = identifier.find(findByIsbn(13)).getOrElse[String]("identifier")("").right.get
 }
 
-case class InvalidBookRecord(cause: ParsingFailure, rawJson: String)
+case class InvalidBookRecord(cause: Error, rawJson: String)
 
 
 object Book {
   type FetchedBookRecord = Either[InvalidBookRecord, Seq[Book]]
 
   def parseJson(json: String): FetchedBookRecord = {
+    val logger = LoggerFactory.getLogger("Book::parseJson")
+
     val raw: Either[ParsingFailure, Json] = parser.parse(json)
 
-    if (raw.isRight) {
-      val rawBooks = raw.right.get.hcursor.get[Seq[Json]]("items").right.get
-      val books = rawBooks.map { new Book(_) }
+    raw match {
+      case Right(validRaw) => {
+        logger.debug("success to parse json")
 
-      Right(books)
-    } else {
-      Left(new InvalidBookRecord(raw.left.get, json))
+        validRaw.hcursor.get[Seq[Json]]("items") match {
+          case Right(rawBooks) => {
+            val books = rawBooks.map { new Book(_) }
+            Right(books)
+          }
+          case Left(invalid) => Left(new InvalidBookRecord(invalid, json))
+       }
+      }
+      case Left(invalidRaw) => {
+        logger.debug("fail to parse json")
+        logger.debug(s"json = $json")
+        Left(new InvalidBookRecord(invalidRaw, json))
+      }
     }
   }
 }

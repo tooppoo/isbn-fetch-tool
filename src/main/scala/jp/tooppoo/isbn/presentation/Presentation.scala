@@ -44,7 +44,7 @@ class CsvPresentation extends Presentation {
       }
       case Left(invalid) => {
         val prefix = "ERROR"
-        val message = invalid.cause.message
+        val message = invalid.cause.getMessage
         val json = invalid.rawJson
 
         Seq(s"$prefix: $message $json")

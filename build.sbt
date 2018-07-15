@@ -4,8 +4,8 @@ version := "0.1"
 
 scalaVersion := "2.12.6"
 
-// https://mvnrepository.com/artifact/net.databinder.dispatch/dispatch-core
-libraryDependencies += "net.databinder.dispatch" % "dispatch-core_2.12" % "0.13.4"
+// https://mvnrepository.com/artifact/org.dispatchhttp/dispatch-core
+libraryDependencies += "org.dispatchhttp" %% "dispatch-core" % "0.14.0"
 
 val circeVersion = "0.9.3"
 
@@ -17,6 +17,10 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+)
+
+libraryDependencies ++= Seq(
+  "ch.qos.logback" % "logback-classic" % "1.2.3" % Runtime
 )
 
 // https://github.com/sbt/sbt-assembly#merge-strategy

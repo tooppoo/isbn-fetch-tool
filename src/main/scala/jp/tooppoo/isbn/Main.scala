@@ -1,13 +1,22 @@
 package jp.tooppoo.isbn
 
 import jp.tooppoo.isbn.service.BookLoadService
+import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
 
 object Main extends App {
-  val isbnList = Source.stdin.getLines.toArray
+  val logger = LoggerFactory.getLogger(this.getClass)
 
-  for { output <- BookLoadService.withGoogle.load(isbnList) }
+  val file = Source.fromFile(args(0))
+  val isbnList = file.getLines.toArray
+
+  println(isbnList)
+  file.close
+
+  for { output <- BookLoadService.withGoogle.load(isbnList) } {
+    logger.debug(s"output = $output")
     println(output)
+  }
 }
