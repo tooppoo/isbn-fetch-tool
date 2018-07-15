@@ -9,7 +9,7 @@ import scala.io.Source
 object Main extends App {
   val logger = LoggerFactory.getLogger(this.getClass)
 
-  val file = Source.fromFile(args(0))
+  val file = Source.fromFile(args(0), "UTF-8")
   val isbnList = file.getLines.toArray
 
   file.close

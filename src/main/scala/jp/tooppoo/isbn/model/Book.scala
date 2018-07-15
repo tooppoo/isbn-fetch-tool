@@ -49,12 +49,18 @@ object Book {
             val books = rawBooks.map { new Book(_) }
             Right(books)
           }
-          case Left(invalid) => Left(new InvalidBookRecord(invalid, json))
+          case Left(invalid) => {
+            logger.debug("fail to get items")
+            logger.debug(s"json = $json")
+
+            Left(new InvalidBookRecord(invalid, json))
+          }
        }
       }
       case Left(invalidRaw) => {
         logger.debug("fail to parse json")
         logger.debug(s"json = $json")
+
         Left(new InvalidBookRecord(invalidRaw, json))
       }
     }

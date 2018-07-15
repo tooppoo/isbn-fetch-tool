@@ -16,10 +16,9 @@ class GoogleBookClient extends BookApiClient {
   val baseUrl = "https://www.googleapis.com/books/v1/volumes"
 
   def fetchByIsbn(isbn: String): Future[String] = {
-    val query = s"q=isbn:$isbn"
-    val svc = url(s"$baseUrl?$query")
+    val request = url(baseUrl).addQueryParameter("q", s"isbn:$isbn")
 
-    client(svc OK as.String)
+    client(request OK as.String)
   }
 
   def close = Http.default.client.close()
