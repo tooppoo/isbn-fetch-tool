@@ -16,10 +16,16 @@ trait Presentation {
 }
 
 class CsvPresentation extends Presentation {
+  class CsvSanitizer(str: String) {
+    def sanitize: String = str.replace(",", ".")
+    def asInline: String = str.replace("\n", " ")
+  }
+  implicit def canSanitizeForCSV(str: String): CsvSanitizer = new CsvSanitizer(str)
+
   def transform(books: Seq[FetchedBookRecord]): String = {
     val rows = books.flatMap {
-      case Right(books) => {
-        books.map { book =>
+      case Right(validBooks) =>
+        validBooks.map { book =>
           val row: Seq[String] = Seq(
             book.isbn10,
             book.isbn13,
@@ -31,24 +37,22 @@ class CsvPresentation extends Presentation {
             "",
             "", // TODO ブクログでの読み取り日時? とりあえず空欄
             "", // TODO ブクログでの読み取り日時? とりあえず空欄
-            book.name,
-            book.authors.mkString(" "),
-            book.publisher,
+            book.name.sanitize,
+            book.authors.map(_.sanitize).mkString(" "),
+            book.publisher.sanitize,
             book.publishedAt,
             convertPrintType(book.printType),
             book.pageCount.getOrElse("").toString,
-            book.price.getOrElse("").toString
+            book.price.getOrElse("").toString.sanitize
           )
           row.mkString(",")
         }
-      }
-      case Left(invalid) => {
+      case Left(invalid) =>
         val prefix = "ERROR"
-        val message = invalid.cause.getMessage
-        val json = invalid.rawJson
+        val message = invalid.cause.getMessage.asInline
+        val json = invalid.rawJson.asInline
 
-        Seq(s"$prefix: $message $json")
-      }
+        Seq(s""""$prefix: $message $json"""")
     }
     rows.mkString("\n")
   }

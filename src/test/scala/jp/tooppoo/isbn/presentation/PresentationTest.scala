@@ -58,7 +58,7 @@ class PresentationTest extends WordSpec with Matchers {
 
         val expected = Seq(
           "4048869515,9784048869515,,,読み終わった,,,,,,ECサイト「4モデル式」戦略マーケティング,権成俊 村上佐央里,アスキー・メディアワークス,2012-09,本,239,",
-          s"ERROR: ${invalidBook.left.get.cause.getMessage} ${invalidJson}"
+          s""""ERROR: ${invalidBook.left.get.cause.getMessage} ${invalidJson}""""
         ).mkString("\n")
 
         assert(output == expected)
