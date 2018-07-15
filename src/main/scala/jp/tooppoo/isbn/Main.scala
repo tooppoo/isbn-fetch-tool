@@ -12,7 +12,6 @@ object Main extends App {
   val file = Source.fromFile(args(0))
   val isbnList = file.getLines.toArray
 
-  println(isbnList)
   file.close
 
   for { output <- BookLoadService.withGoogle.load(isbnList) } {
