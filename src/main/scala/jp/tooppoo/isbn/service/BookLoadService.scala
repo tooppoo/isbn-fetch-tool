@@ -13,7 +13,9 @@ class BookLoadService private (
 ) {
   val logger = LoggerFactory.getLogger(this.getClass)
 
-  def load(isbnList: Seq[String]): Future[String] = loader.load(isbnList).map { books =>
+  def load(isbnList: Seq[String], apiKey: Option[String]): Future[String] = for {
+    books <- loader.load(isbnList, apiKey)
+  } yield {
     loader.close
 
     presentor.transform(books)

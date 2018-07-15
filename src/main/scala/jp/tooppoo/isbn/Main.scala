@@ -1,5 +1,6 @@
 package jp.tooppoo.isbn
 
+import jp.tooppoo.isbn.cli.IsbnOptionParser
 import jp.tooppoo.isbn.service.BookLoadService
 import org.slf4j.LoggerFactory
 
@@ -9,13 +10,21 @@ import scala.io.Source
 object Main extends App {
   val logger = LoggerFactory.getLogger(this.getClass)
 
-  val file = Source.fromFile(args(0), "UTF-8")
-  val isbnList = file.getLines.toArray
+  val options = IsbnOptionParser.parse(args).build
 
-  file.close
+  options match {
+    case Right(config) =>
+      val apiKey = config.apiKey
 
-  for { output <- BookLoadService.withGoogle.load(isbnList) } {
-    logger.debug(s"output = $output")
-    println(output)
+      val file = Source.fromFile(config.source, "UTF-8")
+      val isbnList = file.getLines.toArray
+
+      file.close
+
+      for { output <- BookLoadService.withGoogle.load(isbnList, apiKey) } {
+        logger.debug(s"output = $output")
+        println(output)
+      }
+    case Left(messages) => for (message <- messages) println(message)
   }
 }

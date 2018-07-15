@@ -11,9 +11,9 @@ import scala.concurrent.Future
 class BookLoader(private val client: BookApiClient) {
   val logger = LoggerFactory.getLogger(BookLoader.getClass)
 
-  def load(isbnList: Seq[String]): Future[Seq[FetchedBookRecord]] = {
+  def load(isbnList: Seq[String], apiKey: Option[String] = None): Future[Seq[FetchedBookRecord]] = {
     val fetchFutures: Seq[Future[String]] = isbnList.map { isbn =>
-      client.fetchByIsbn(isbn) recover {
+      client.fetchByIsbn(isbn, apiKey) recover {
         case r => {
           logger.debug(s"failed to fetch book by isbn = $isbn")
           r.toString // APIコールが失敗しても、レスポンスはそのまま使用する
