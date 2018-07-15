@@ -29,11 +29,13 @@ case class Book private(json: Json) {
   val isbn13: String = identifier.find(findByIsbn(13)).getOrElse[String]("identifier")("").right.get
 }
 
-case class InvalidBookRecord(cause: Error, rawJson: String)
+case class InvalidBookRecord(cause: Exception, rawJson: String)
 
 
 object Book {
   type FetchedBookRecord = Either[InvalidBookRecord, Seq[Book]]
+
+  final case class BookNotFound(message: String) extends RuntimeException(message)
 
   def parseJson(json: String): FetchedBookRecord = {
     val logger = LoggerFactory.getLogger("Book::parseJson")
@@ -44,18 +46,24 @@ object Book {
       case Right(validRaw) => {
         logger.debug("success to parse json")
 
-        validRaw.hcursor.get[Seq[Json]]("items") match {
-          case Right(rawBooks) => {
-            val books = rawBooks.map { new Book(_) }
-            Right(books)
-          }
-          case Left(invalid) => {
-            logger.debug("fail to get items")
-            logger.debug(s"json = $json")
+        val totalItems = validRaw.hcursor.get[Int]("totalItems").getOrElse(0)
 
-            Left(new InvalidBookRecord(invalid, json))
+        if (totalItems > 0) {
+          validRaw.hcursor.get[Seq[Json]]("items") match {
+            case Right(rawBooks) => {
+              val books = rawBooks.map { new Book(_) }
+              Right(books)
+            }
+            case Left(invalid) => {
+              logger.debug("fail to get items")
+              logger.debug(s"json = $json")
+
+              Left(new InvalidBookRecord(invalid, json))
+            }
           }
-       }
+        } else {
+          Left(new InvalidBookRecord(new BookNotFound("book not found"), json))
+        }
       }
       case Left(invalidRaw) => {
         logger.debug("fail to parse json")
