@@ -36,8 +36,7 @@ class PresentationTest extends WordSpec with Matchers {
             pageCount = Some(100),
             price = Some(1000),
             isbn10 = "isbn10",
-            isbn13 = "isbn13",
-            ""
+            isbn13 = "isbn13"
           )))
         )
         val output = presenter.transform(books)
@@ -59,8 +58,7 @@ class PresentationTest extends WordSpec with Matchers {
             pageCount = Some(100),
             price = Some(1000),
             isbn10 = "isbn10",
-            isbn13 = "isbn13",
-            ""
+            isbn13 = "isbn13"
           ))),
           Right(Seq(Book(
             name = "テスト2",
@@ -71,8 +69,7 @@ class PresentationTest extends WordSpec with Matchers {
             pageCount = None,
             price = None,
             isbn10 = "isbn10",
-            isbn13 = "isbn13",
-            ""
+            isbn13 = "isbn13"
           )))
         )
         val output = presenter.transform(books)
@@ -97,8 +94,7 @@ class PresentationTest extends WordSpec with Matchers {
             pageCount = Some(100),
             price = Some(1000),
             isbn10 = "isbn10",
-            isbn13 = "isbn13",
-            ""
+            isbn13 = "isbn13"
           ))),
           Left(InvalidBookRecord(new RuntimeException("error test"), "{t1: 2, t2, \"test\"}", "error-isbn"))
         )

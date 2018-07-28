@@ -9,8 +9,7 @@ case class Book(
                  pageCount: Option[Int],
                  price: Option[Long],
                  isbn10: String,
-                 isbn13: String,
-                 rawIsbn: String // tmp
+                 isbn13: String
                ) {
 }
 
@@ -24,7 +23,6 @@ object Book {
              pageCount: Option[Int],
              price: Option[Long],
              isbn10: String,
-             isbn13: String,
-             rawIsbn: String // tmp
-           ) = new Book(name, authors, publisher, publishedAt, printType, pageCount, price, isbn10, isbn13, rawIsbn)
+             isbn13: String
+           ) = new Book(name, authors, publisher, publishedAt, printType, pageCount, price, isbn10, isbn13)
 }

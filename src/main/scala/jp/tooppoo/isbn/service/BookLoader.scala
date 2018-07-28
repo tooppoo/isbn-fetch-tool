@@ -2,11 +2,12 @@ package jp.tooppoo.isbn.service
 
 import jp.tooppoo.isbn.api.BookApiClient
 import jp.tooppoo.isbn.parser.BookJsonParser
-import jp.tooppoo.isbn.parser.BookJsonParser.ParsedBooks
+import jp.tooppoo.isbn.parser.BookJsonParser.{InvalidBookRecord, ParsedBooks}
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 class BookLoader(private val client: BookApiClient) {
   val logger = LoggerFactory.getLogger(BookLoader.getClass)
@@ -28,11 +29,16 @@ class BookLoader(private val client: BookApiClient) {
       logger.debug(s"jsonList = $pairList")
 
       for ((json, isbn) <- pairList) yield {
-        val book = BookJsonParser.forGoogle.parse(json, isbn)
+        val book = BookJsonParser.forGoogle.parse(json)
 
         logger.debug(s"book = $book")
 
-        book
+        book match {
+          case Success(books) => Right(books)
+          case Failure(invalid) => {
+            Left(new InvalidBookRecord(invalid, json, isbn))
+          }
+        }
       }
     }
   }

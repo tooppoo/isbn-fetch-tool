@@ -2,17 +2,18 @@ package jp.tooppoo.isbn.parser
 
 import io.circe.{Json, ParsingFailure, parser}
 import jp.tooppoo.isbn.model.Book
-import jp.tooppoo.isbn.parser.BookJsonParser.{InvalidBookRecord, ParsedBooks}
 import org.slf4j.LoggerFactory
 
+import scala.util.{Failure, Success, Try}
+
 trait BookJsonParser {
-  def parse(json: String, rawIsbn: String): ParsedBooks
+  def parse(json: String): Try[Seq[Book]]
 }
 
 class GoogleBooksParserBook extends BookJsonParser {
   val logger = LoggerFactory.getLogger("Book::parseJson")
 
-  def parse(json: String, rawIsbn: String): ParsedBooks = {
+  def parse(json: String): Try[Seq[Book]] = {
     val raw: Either[ParsingFailure, Json] = parser.parse(json)
 
     raw match {
@@ -24,30 +25,30 @@ class GoogleBooksParserBook extends BookJsonParser {
         if (totalItems > 0) {
           validRaw.hcursor.get[Seq[Json]]("items") match {
             case Right(rawBooks) => {
-              val books = rawBooks.map(buildBook(rawIsbn))
-              Right(books)
+              val books = rawBooks.map(buildBook)
+              Success(books)
             }
             case Left(invalid) => {
               logger.debug("fail to get items")
               logger.debug(s"json = $json")
 
-              Left(new InvalidBookRecord(invalid, json, ""))
+              Failure(invalid)
             }
           }
         } else {
-          Right(Seq.empty)
+          Success(Seq.empty)
         }
       }
       case Left(invalidRaw) => {
         logger.debug("fail to parse json")
         logger.debug(s"json = $json")
 
-        Left(new InvalidBookRecord(invalidRaw, json, ""))
+        Failure(invalidRaw)
       }
     }
   }
 
-  private def buildBook(isbn: String)(json: Json) = {
+  private def buildBook(json: Json) = {
     val volume = json.hcursor.downField("volumeInfo")
     val identifier = volume.downField("industryIdentifiers").downArray
 
@@ -77,8 +78,7 @@ class GoogleBooksParserBook extends BookJsonParser {
       pageCount,
       price,
       isbn10,
-      isbn13,
-      isbn
+      isbn13
     )
   }
 
@@ -90,7 +90,7 @@ class GoogleBooksParserBook extends BookJsonParser {
 object BookJsonParser {
   type ParsedBooks = Either[InvalidBookRecord, Seq[Book]]
 
-  final case class InvalidBookRecord(cause: Exception, rawJson: String, failedIsbn: String)
+  final case class InvalidBookRecord(cause: Throwable, rawJson: String, failedIsbn: String)
   final case class BookNotFound(message: String) extends RuntimeException(message)
 
   val forGoogle = new GoogleBooksParserBook
