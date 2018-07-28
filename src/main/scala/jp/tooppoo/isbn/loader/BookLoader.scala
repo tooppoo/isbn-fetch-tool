@@ -9,7 +9,27 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-class BookLoader(private val client: BookApiClient) {
+trait MixinApiClient {
+  protected val client: BookApiClient
+}
+
+object MixinApiClient {
+  trait MixinGoogleClient extends MixinApiClient {
+    protected val client = BookApiClient.fromGoogleBooks
+  }
+}
+
+trait MixinJsonParser {
+  protected val parser: BookJsonParser
+}
+object MixinJsonParser {
+  trait MixinGoogleParser extends MixinJsonParser {
+    protected val parser = BookJsonParser.forGoogle
+  }
+}
+
+
+trait BookLoader extends MixinApiClient with MixinJsonParser {
   val logger = LoggerFactory.getLogger(BookLoader.getClass)
 
   def load(isbnList: Seq[String], apiKey: Option[String] = None): Future[Seq[ParsedBooks]] = {
@@ -29,7 +49,7 @@ class BookLoader(private val client: BookApiClient) {
       logger.debug(s"jsonList = $pairList")
 
       for ((json, isbn) <- pairList) yield {
-        val book = BookJsonParser.forGoogle.parse(json)
+        val book = parser.parse(json)
 
         logger.debug(s"book = $book")
 
@@ -47,6 +67,9 @@ class BookLoader(private val client: BookApiClient) {
 }
 
 object BookLoader {
+  val google = new BookLoader with MixinApiClient.MixinGoogleClient with MixinJsonParser.MixinGoogleParser
+  val default = google
 
-  def apply(client: BookApiClient) = new BookLoader(client)
+  def apply = default
 }
+

@@ -25,7 +25,7 @@ object Main extends App {
 
       val client = BookApiClient.fromGoogleBooks
 
-      BookLoader(client).load(isbnList, apiKey) map { books =>
+      BookLoader.apply.load(isbnList, apiKey) map { books =>
         client.close
         val output = Presentation.asCSV.transform(books)
 
