@@ -1,7 +1,9 @@
 package jp.tooppoo.isbn
 
+import jp.tooppoo.isbn.api.BookApiClient
 import jp.tooppoo.isbn.cli.IsbnOptionParser
-import jp.tooppoo.isbn.service.BookLoadService
+import jp.tooppoo.isbn.presentation.Presentation
+import jp.tooppoo.isbn.service.BookLoader
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -21,7 +23,12 @@ object Main extends App {
 
       file.close
 
-      for { output <- BookLoadService.withGoogle.load(isbnList, apiKey) } {
+      val client = BookApiClient.fromGoogleBooks
+
+      BookLoader(client).load(isbnList, apiKey) map { books =>
+        client.close
+        val output = Presentation.asCSV.transform(books)
+
         logger.debug(s"output = $output")
         println(output)
       }
