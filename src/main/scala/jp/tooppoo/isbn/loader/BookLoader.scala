@@ -1,4 +1,4 @@
-package jp.tooppoo.isbn.service
+package jp.tooppoo.isbn.loader
 
 import jp.tooppoo.isbn.api.BookApiClient
 import jp.tooppoo.isbn.parser.BookJsonParser

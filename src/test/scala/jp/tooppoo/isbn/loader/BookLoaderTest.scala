@@ -1,11 +1,11 @@
-package jp.tooppoo.isbn.service
+package jp.tooppoo.isbn.loader
 
 import jp.tooppoo.isbn.api.BookApiClient
 import org.scalatest.{Assertion, AsyncWordSpec, Matchers}
 
 import scala.concurrent.Future
 
-class BookOldLoaderTest extends AsyncWordSpec with Matchers {
+class BookLoaderTest extends AsyncWordSpec with Matchers {
   def withGoogleClient(testcase: BookApiClient => Future[Assertion]): Future[Assertion] = {
     testcase(BookApiClient.fromGoogleBooks)
   }

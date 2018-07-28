@@ -3,7 +3,7 @@ package jp.tooppoo.isbn
 import jp.tooppoo.isbn.api.BookApiClient
 import jp.tooppoo.isbn.cli.IsbnOptionParser
 import jp.tooppoo.isbn.presentation.Presentation
-import jp.tooppoo.isbn.service.BookLoader
+import jp.tooppoo.isbn.loader.BookLoader
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext.Implicits.global
