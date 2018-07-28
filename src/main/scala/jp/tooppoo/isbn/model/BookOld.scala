@@ -3,7 +3,7 @@ package jp.tooppoo.isbn.model
 import io.circe.{Json, ParsingFailure, parser, Error}
 import org.slf4j.LoggerFactory
 
-case class Book private(json: Json, quiriedIsbn: String) {
+case class BookOld private(json: Json, quiriedIsbn: String) {
   private val volume = json.hcursor.downField("volumeInfo")
   private val identifier = volume.downField("industryIdentifiers").downArray
 
@@ -32,8 +32,8 @@ case class Book private(json: Json, quiriedIsbn: String) {
 case class InvalidBookRecord(cause: Exception, rawJson: String, failedIsbn: String)
 
 
-object Book {
-  type FetchedBookRecord = Either[InvalidBookRecord, Seq[Book]]
+object BookOld {
+  type FetchedBookRecord = Either[InvalidBookRecord, Seq[BookOld]]
 
   final case class BookNotFound(message: String) extends RuntimeException(message)
 
@@ -51,7 +51,7 @@ object Book {
         if (totalItems > 0) {
           validRaw.hcursor.get[Seq[Json]]("items") match {
             case Right(rawBooks) => {
-              val books = rawBooks.map { new Book(_, queriedIsbn) }
+              val books = rawBooks.map { new BookOld(_, queriedIsbn) }
               Right(books)
             }
             case Left(invalid) => {

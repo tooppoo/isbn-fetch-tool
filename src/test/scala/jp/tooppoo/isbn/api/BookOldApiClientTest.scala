@@ -5,7 +5,7 @@ import org.scalatest.compatible.Assertion
 
 import scala.concurrent.Future
 
-class BookApiClientTest extends AsyncWordSpec with Matchers {
+class BookOldApiClientTest extends AsyncWordSpec with Matchers {
   private def withGoogleClient(testcase: BookApiClient => Future[Assertion]): Future[Assertion] = {
     testcase(BookApiClient.fromGoogleBooks)
   }

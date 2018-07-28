@@ -4,12 +4,12 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.io.Source
 
-class BookTest extends WordSpec with Matchers {
+class BookOldTest extends WordSpec with Matchers {
   "Book" when {
     "invalid format json" should {
       "is left" in {
         val json = """{"a":}"""
-        val book = Book.parseJson(json, "")
+        val book = BookOld.parseJson(json, "")
 
         assert(book.isLeft)
         assert(book.left.get.rawJson == json)
@@ -18,13 +18,13 @@ class BookTest extends WordSpec with Matchers {
     "valid format json" should {
       val jsonLines = Source.fromResource("book.json").getLines
       val json = jsonLines.reduce { (s1, s2) => s1 + s2 }
-      val books = Book.parseJson(json, "")
+      val books = BookOld.parseJson(json, "")
 
       "is right" in {
         assert(books.isRight)
       }
       "have each properties" in {
-        val body: Book = books.right.get.head
+        val body: BookOld = books.right.get.head
 
         assert(body.name == "ECサイト「4モデル式」戦略マーケティング")
         assert(body.authors == Seq("権成俊", "村上佐央里"))

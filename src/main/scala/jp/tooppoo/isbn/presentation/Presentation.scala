@@ -1,7 +1,7 @@
 package jp.tooppoo.isbn.presentation
 
-import jp.tooppoo.isbn.model.Book.FetchedBookRecord
-import jp.tooppoo.isbn.model.{Book, InvalidBookRecord}
+import jp.tooppoo.isbn.model.BookOld.FetchedBookRecord
+import jp.tooppoo.isbn.model.{BookOld, InvalidBookRecord}
 
 trait Presentation {
   protected def convertPrintType(label: String): String = {
@@ -12,7 +12,7 @@ trait Presentation {
     }
 
   }
-  def transform(books: Seq[Either[InvalidBookRecord, Seq[Book]]]): String
+  def transform(books: Seq[Either[InvalidBookRecord, Seq[BookOld]]]): String
 }
 
 class CsvPresentation extends Presentation {

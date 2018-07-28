@@ -1,8 +1,8 @@
 package jp.tooppoo.isbn.service
 
 import jp.tooppoo.isbn.api.BookApiClient
-import jp.tooppoo.isbn.model.Book
-import jp.tooppoo.isbn.model.Book.FetchedBookRecord
+import jp.tooppoo.isbn.model.BookOld
+import jp.tooppoo.isbn.model.BookOld.FetchedBookRecord
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -28,7 +28,7 @@ class BookLoader(private val client: BookApiClient) {
       logger.debug(s"jsonList = $pairList")
 
       for ((json, isbn) <- pairList) yield {
-        val book = Book.parseJson(json, isbn)
+        val book = BookOld.parseJson(json, isbn)
 
         logger.debug(s"book = $book")
 

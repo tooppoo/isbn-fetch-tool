@@ -1,6 +1,6 @@
 package jp.tooppoo.isbn.presentation
 
-import jp.tooppoo.isbn.model.{Book, InvalidBookRecord}
+import jp.tooppoo.isbn.model.{BookOld, InvalidBookRecord}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.io.Source
@@ -25,7 +25,7 @@ class PresentationTest extends WordSpec with Matchers {
     }
     "single book" in withCsvPresentation { presenter =>
       withJsonResource("book.json") { json =>
-        val books = Seq(Right(Book.parseJson(json, "").right.get))
+        val books = Seq(Right(BookOld.parseJson(json, "").right.get))
         val output = presenter.transform(books)
 
         val expected = "4048869515,9784048869515,,,読み終わった,,,,,,ECサイト「4モデル式」戦略マーケティング,権成俊 村上佐央里,アスキー・メディアワークス,2012-09,本,239,"
@@ -35,7 +35,7 @@ class PresentationTest extends WordSpec with Matchers {
     }
     "some books" in withCsvPresentation { presenter =>
       withJsonResource("books.json") { json =>
-        val books = Seq(Right(Book.parseJson(json, "").right.get))
+        val books = Seq(Right(BookOld.parseJson(json, "").right.get))
         val output = presenter.transform(books)
 
         val expected = Seq(
@@ -48,11 +48,11 @@ class PresentationTest extends WordSpec with Matchers {
     }
     "contain invalid book" in withCsvPresentation { presenter =>
       withJsonResource("book.json") { json =>
-        val validBooks = Seq(Right(Book.parseJson(json, "123").right.get))
+        val validBooks = Seq(Right(BookOld.parseJson(json, "123").right.get))
         val invalidJson = """{"dummy":"""
-        val invalidBook = Left(Book.parseJson(invalidJson, "123").left.get)
+        val invalidBook = Left(BookOld.parseJson(invalidJson, "123").left.get)
 
-        val books: Seq[Either[InvalidBookRecord, Seq[Book]]] = validBooks :+ invalidBook
+        val books: Seq[Either[InvalidBookRecord, Seq[BookOld]]] = validBooks :+ invalidBook
         val output = presenter.transform(books)
 
 
