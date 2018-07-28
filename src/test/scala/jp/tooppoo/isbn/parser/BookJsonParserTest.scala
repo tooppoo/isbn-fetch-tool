@@ -15,7 +15,7 @@ class BookJsonParserTest extends WordSpec with Matchers {
       "invalid format" in withGoogleParser { parser =>
         val json = """{"a":}"""
 
-        parser.parse(json) match {
+        parser.parse(json, "") match {
           case Left(invalid) =>
             assert(invalid.rawJson == json)
           case _ => fail()
@@ -24,7 +24,7 @@ class BookJsonParserTest extends WordSpec with Matchers {
       "empty record" in withGoogleParser { parser =>
         val json = Source.fromResource("empty.json").mkString("")
 
-        parser.parse(json) match {
+        parser.parse(json, "") match {
           case Right(books) => assert(books.isEmpty)
           case _ => fail()
         }
@@ -32,7 +32,7 @@ class BookJsonParserTest extends WordSpec with Matchers {
       "some records" in withGoogleParser { parser =>
         val json = Source.fromResource("book.json").mkString("")
 
-        parser.parse(json) match {
+        parser.parse(json, "") match {
           case Right(books) =>
             val body: Book = books.head
 

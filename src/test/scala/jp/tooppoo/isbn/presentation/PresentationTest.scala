@@ -1,6 +1,7 @@
 package jp.tooppoo.isbn.presentation
 
-import jp.tooppoo.isbn.model.{BookOld, InvalidBookRecord}
+import jp.tooppoo.isbn.model.Book
+import jp.tooppoo.isbn.parser.BookJsonParser.{InvalidBookRecord, ParsedBooks}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.io.Source
@@ -25,22 +26,60 @@ class PresentationTest extends WordSpec with Matchers {
     }
     "single book" in withCsvPresentation { presenter =>
       withJsonResource("book.json") { json =>
-        val books = Seq(Right(BookOld.parseJson(json, "").right.get))
+        val books = Seq(
+          Right(Seq(Book(
+            name = "テスト",
+            authors = Seq("一郎", "二郎"),
+            publisher = "試験書籍",
+            publishedAt = "2018-10",
+            printType = "BOOK",
+            pageCount = Some(100),
+            price = Some(1000),
+            isbn10 = "isbn10",
+            isbn13 = "isbn13",
+            ""
+          )))
+        )
         val output = presenter.transform(books)
 
-        val expected = "4048869515,9784048869515,,,読み終わった,,,,,,ECサイト「4モデル式」戦略マーケティング,権成俊 村上佐央里,アスキー・メディアワークス,2012-09,本,239,"
+        val expected = "isbn10,isbn13,,,読み終わった,,,,,,テスト,一郎 二郎,試験書籍,2018-10,本,100,1000"
 
         assert(output == expected)
       }
     }
     "some books" in withCsvPresentation { presenter =>
       withJsonResource("books.json") { json =>
-        val books = Seq(Right(BookOld.parseJson(json, "").right.get))
+        val books = Seq(
+          Right(Seq(Book(
+            name = "テスト1",
+            authors = Seq("一郎", "二郎"),
+            publisher = "試験書籍",
+            publishedAt = "2018-10",
+            printType = "BOOK",
+            pageCount = Some(100),
+            price = Some(1000),
+            isbn10 = "isbn10",
+            isbn13 = "isbn13",
+            ""
+          ))),
+          Right(Seq(Book(
+            name = "テスト2",
+            authors = Seq("三郎"),
+            publisher = "試験ブックス",
+            publishedAt = "2017-01-10",
+            printType = "BOOK",
+            pageCount = None,
+            price = None,
+            isbn10 = "isbn10",
+            isbn13 = "isbn13",
+            ""
+          )))
+        )
         val output = presenter.transform(books)
 
         val expected = Seq(
-          "4048869515,9784048869515,,,読み終わった,,,,,,ECサイト「4モデル式」戦略マーケティング,権成俊 村上佐央里,アスキー・メディアワークス,2012-09,本,239,",
-          "4492557709,9784492557709,,,読み終わった,,,,,,通販ビジネスの教科書,岩永　洋平,東洋経済新報社,2016-07-08,本,264,"
+          "isbn10,isbn13,,,読み終わった,,,,,,テスト1,一郎 二郎,試験書籍,2018-10,本,100,1000",
+          "isbn10,isbn13,,,読み終わった,,,,,,テスト2,三郎,試験ブックス,2017-01-10,本,,"
         ).mkString("\n")
 
         assert(output == expected)
@@ -48,17 +87,27 @@ class PresentationTest extends WordSpec with Matchers {
     }
     "contain invalid book" in withCsvPresentation { presenter =>
       withJsonResource("book.json") { json =>
-        val validBooks = Seq(Right(BookOld.parseJson(json, "123").right.get))
-        val invalidJson = """{"dummy":"""
-        val invalidBook = Left(BookOld.parseJson(invalidJson, "123").left.get)
-
-        val books: Seq[Either[InvalidBookRecord, Seq[BookOld]]] = validBooks :+ invalidBook
+        val books: Seq[ParsedBooks] = Seq(
+          Right(Seq(Book(
+            name = "テスト1",
+            authors = Seq("一郎", "二郎"),
+            publisher = "試験書籍",
+            publishedAt = "2018-10",
+            printType = "BOOK",
+            pageCount = Some(100),
+            price = Some(1000),
+            isbn10 = "isbn10",
+            isbn13 = "isbn13",
+            ""
+          ))),
+          Left(InvalidBookRecord(new RuntimeException("error test"), "{t1: 2, t2, \"test\"}", "error-isbn"))
+        )
         val output = presenter.transform(books)
 
 
         val expected = Seq(
-          "4048869515,9784048869515,,,読み終わった,,,,,,ECサイト「4モデル式」戦略マーケティング,権成俊 村上佐央里,アスキー・メディアワークス,2012-09,本,239,",
-          s""""ERROR: 123 ${invalidBook.left.get.cause.getMessage} ${invalidJson}""""
+          "isbn10,isbn13,,,読み終わった,,,,,,テスト1,一郎 二郎,試験書籍,2018-10,本,100,1000",
+          "\"ERROR: error-isbn error test {t1: 2, t2, \"test\"}\""
         ).mkString("\n")
 
         assert(output == expected)

@@ -6,13 +6,13 @@ import jp.tooppoo.isbn.parser.BookJsonParser.{InvalidBookRecord, ParsedBooks}
 import org.slf4j.LoggerFactory
 
 trait BookJsonParser {
-  def parse(json: String): ParsedBooks
+  def parse(json: String, rawIsbn: String): ParsedBooks
 }
 
 class GoogleBooksParserBook extends BookJsonParser {
   val logger = LoggerFactory.getLogger("Book::parseJson")
 
-  def parse(json: String): ParsedBooks = {
+  def parse(json: String, rawIsbn: String): ParsedBooks = {
     val raw: Either[ParsingFailure, Json] = parser.parse(json)
 
     raw match {
@@ -24,7 +24,7 @@ class GoogleBooksParserBook extends BookJsonParser {
         if (totalItems > 0) {
           validRaw.hcursor.get[Seq[Json]]("items") match {
             case Right(rawBooks) => {
-              val books = rawBooks.map(buildBook)
+              val books = rawBooks.map(buildBook(rawIsbn))
               Right(books)
             }
             case Left(invalid) => {
@@ -47,7 +47,7 @@ class GoogleBooksParserBook extends BookJsonParser {
     }
   }
 
-  private val buildBook: Json => Book = { json =>
+  private def buildBook(isbn: String)(json: Json) = {
     val volume = json.hcursor.downField("volumeInfo")
     val identifier = volume.downField("industryIdentifiers").downArray
 
@@ -77,7 +77,8 @@ class GoogleBooksParserBook extends BookJsonParser {
       pageCount,
       price,
       isbn10,
-      isbn13
+      isbn13,
+      isbn
     )
   }
 

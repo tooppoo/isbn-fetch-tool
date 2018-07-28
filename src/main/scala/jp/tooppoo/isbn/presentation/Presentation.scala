@@ -1,7 +1,6 @@
 package jp.tooppoo.isbn.presentation
 
-import jp.tooppoo.isbn.model.BookOld.FetchedBookRecord
-import jp.tooppoo.isbn.model.{BookOld, InvalidBookRecord}
+import jp.tooppoo.isbn.parser.BookJsonParser.ParsedBooks
 
 trait Presentation {
   protected def convertPrintType(label: String): String = {
@@ -12,7 +11,7 @@ trait Presentation {
     }
 
   }
-  def transform(books: Seq[Either[InvalidBookRecord, Seq[BookOld]]]): String
+  def transform(books: Seq[ParsedBooks]): String
 }
 
 class CsvPresentation extends Presentation {
@@ -22,7 +21,7 @@ class CsvPresentation extends Presentation {
   }
   implicit def canSanitizeForCSV(str: String): CsvSanitizer = new CsvSanitizer(str)
 
-  def transform(books: Seq[FetchedBookRecord]): String = {
+  def transform(books: Seq[ParsedBooks]): String = {
     val rows = books.flatMap {
       case Right(validBooks) =>
         validBooks.map { book =>
