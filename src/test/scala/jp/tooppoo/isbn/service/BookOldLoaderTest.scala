@@ -1,7 +1,6 @@
 package jp.tooppoo.isbn.service
 
 import jp.tooppoo.isbn.api.BookApiClient
-import jp.tooppoo.isbn.model.BookOld
 import org.scalatest.{Assertion, AsyncWordSpec, Matchers}
 
 import scala.concurrent.Future
